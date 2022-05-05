@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private final int num_buttons = idButtons.length;
     private Button[] buttons;
     private UnsortedArraySet<Character> set;
+    private BSTMapping<String, Integer> bst;
+    private int numWords;
 
     /**
      * Constructor de la clase
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private void initComponents() {
         this.set = new UnsortedArraySet<Character>(num_buttons);
         this.buttons = new Button[num_buttons];
+        this.bst = new BSTMapping<String, Integer>();
+        this.numWords = 0;
 
         generateRandomArraySet();
         initButtons();
@@ -160,5 +164,69 @@ public class MainActivity extends AppCompatActivity {
         if (str.length() > 0) {
             word.setText(str.substring(0, str.length() - 1));
         }
+    }
+
+    /**
+     * Método que introduce una palabra en el TextView
+     *
+     * @param view
+     */
+    public void introdueix(View view) {
+        TextView word = (TextView) findViewById ( R.id.word );
+        TextView foundWords = (TextView) findViewById ( R.id.ayuda );
+        // Obtenemos la palabra central
+        String str = (String) word.getText();
+        Integer times = 0;
+
+        if(isCorrect(str)){
+            // Obtenemos las apariciones anteriores
+            times = bst.get(str);
+            System.out.println("{Palabara: " + str + ", Apariciones: " + times);
+
+            // Si no hay apariciones de esa palabra
+            if(times==null){
+                bst.put(str, 1);
+                numWords++;
+                // Si ya había aparecido
+            }else{
+                bst.put(str, times + 1);
+            }
+
+            // Visualización de la lista de palabras
+            foundWords.setText(Lista());
+
+        } else {
+            System.out.println("Falta implementar cuando una palabra no es correcta");
+        }
+    }
+
+    /**
+     *
+     * @param str
+     * @return
+     */
+    private boolean isCorrect(String str){
+        // Obtenemos la letra central
+        String lletraC=(String)buttons[6].getText();
+
+        return (str.length()>=3) && (str.contains(lletraC));
+    }
+
+    private String Lista(){
+        String str = "Has introducido "+ numWords +" palabras:";
+        Iterator iterator = bst.IteratorBSTMappging();
+        BSTMapping.Pair pair;
+
+        if(iterator.hasNext()){
+            pair = (BSTMapping.Pair)iterator.next();
+            str += pair.getKey()+" ("+pair.getValue()+")";
+        }
+
+        while(iterator.hasNext()){
+            pair = (BSTMapping.Pair)iterator.next();
+            str += ", "+pair.getKey()+" ("+pair.getValue()+")";
+        }
+
+        return str;
     }
 }
