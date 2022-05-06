@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -74,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         // Adquirimos las variables de la interfaz que queremos modificar
         Button button = findViewById(view.getId());
         TextView word = findViewById(R.id.word);
+
+        // Quitamos el error
+        word.setBackgroundColor(0);
 
         // Actualizamos el contenido
         String txtOriginal = (String) word.getText();
@@ -161,6 +163,9 @@ public class MainActivity extends AppCompatActivity {
         TextView word = findViewById(R.id.word);
         String str = (String) word.getText();
 
+        // Quitamos el error
+        word.setBackgroundColor(0);
+
         if (str.length() > 0) {
             word.setText(str.substring(0, str.length() - 1));
         }
@@ -173,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void introdueix(View view) {
         TextView word = (TextView) findViewById ( R.id.word );
-        TextView foundWords = (TextView) findViewById ( R.id.ayuda );
+        TextView foundWords = (TextView) findViewById ( R.id.palabras );
         // Obtenemos la palabra central
         String str = (String) word.getText();
         Integer times = 0;
@@ -184,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("{Palabara: " + str + ", Apariciones: " + times);
 
             // Si no hay apariciones de esa palabra
-            if(times==null){
+            if(times == null){
                 bst.put(str, 1);
                 numWords++;
                 // Si ya había aparecido
@@ -196,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
             foundWords.setText(Lista());
 
         } else {
-            System.out.println("Falta implementar cuando una palabra no es correcta");
+            word.setBackground(getResources().getDrawable(com.google.android.material.R.color.error_color_material_light));
         }
     }
 

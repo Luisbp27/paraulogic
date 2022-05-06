@@ -30,7 +30,7 @@ public class BSTMapping<K extends Comparable, V> {
      */
     public V put(K key, V value){
         // Obtenemos el valor anterior
-        V valor=get(key);
+        V valor = get(key);
         // Modificamos
         this.root = put(key, value, root);
 
