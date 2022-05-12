@@ -3,10 +3,12 @@ package com.example.paraulogic;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -202,6 +204,14 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             word.setBackground(getResources().getDrawable(com.google.android.material.R.color.error_color_material_light));
+
+            // Generamos el aviso de error
+            Context context = getApplicationContext();
+            CharSequence text = "Hola";
+            int duracion = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duracion);
+            toast.show();
         }
     }
 
