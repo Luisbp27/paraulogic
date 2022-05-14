@@ -10,8 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.SQLOutput;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private UnsortedArraySet<Character> set;
     private BSTMapping<String, Integer> bst;
     private int numWords;
+    private TreeSet treeSet;
 
     /**
      * Constructor de la clase
@@ -32,21 +39,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initComponents();
+        try {
+            initComponents();
+        } catch (Exception e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
     }
 
     /**
      * Inicialización de los componentes
      *
      */
-    private void initComponents() {
+    private void initComponents() throws Exception {
         this.set = new UnsortedArraySet<Character>(num_buttons);
         this.buttons = new Button[num_buttons];
         this.bst = new BSTMapping<String, Integer>();
         this.numWords = 0;
+        this.treeSet = new TreeSet<String>();
 
         generateRandomArraySet();
         initButtons();
+        generarArbolDiccionario();
+    }
+
+    private void generarArbolDiccionario() throws Exception {
+        InputStream is = getResources().openRawResource(R.raw.catala_filtrat);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+        String word = br.readLine();
+        while (word != null) {
+            if (word.length() >= 3) {
+                treeSet.add(word);
+            }
+
+            word = br.readLine();
+        }
     }
 
     /**
@@ -178,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param view
      */
-    public void introdueix(View view) {
+    public void introdueix(View view) throws IOException {
         TextView word = (TextView) findViewById ( R.id.word );
         TextView foundWords = (TextView) findViewById ( R.id.palabras );
         // Obtenemos la palabra central
@@ -194,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             if(times == null){
                 bst.put(str, 1);
                 numWords++;
-                // Si ya había aparecido
+            // Si ya había aparecido
             }else{
                 bst.put(str, times + 1);
             }
@@ -202,13 +229,22 @@ public class MainActivity extends AppCompatActivity {
             // Visualización de la lista de palabras
             foundWords.setText(Lista());
 
+            // Borramos el TextView superior para introducir la siguiente palabra
+            word.setText("");
+
         } else {
             word.setBackground(getResources().getDrawable(com.google.android.material.R.color.error_color_material_light));
 
             // Generamos el aviso de error
             Context context = getApplicationContext();
-            CharSequence text = "Hola";
+            CharSequence text = "";
             int duracion = Toast.LENGTH_LONG;
+
+            if (str.length() < 3) {
+                text = "La palabra introducida es demasiado corta. ¡Prueba otra vez!";
+            } else {
+                text = "La palabra introducida no es correcta. ¡Prueba otra vez!";
+            }
 
             Toast toast = Toast.makeText(context, text, duracion);
             toast.show();
@@ -217,14 +253,11 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      *
-     * @param str
+     * @param word
      * @return
      */
-    private boolean isCorrect(String str){
-        // Obtenemos la letra central
-        String lletraC=(String)buttons[6].getText();
-
-        return (str.length()>=3) && (str.contains(lletraC));
+    private boolean isCorrect(String word) throws IOException {
+        return ((word.length() >= 3) && (word.contains((String) buttons[6].getText())) && (treeSet.contains(word)));
     }
 
     private String Lista(){
