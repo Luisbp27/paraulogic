@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private BSTMapping<String, Integer> bst;
     private int numWords;
     private TreeSet treeSet;
+
+    public static final String EXTRA_MESSAGE = "com.example.paraulogic.MESSAGE";
 
     /**
      * Constructor de la clase
@@ -116,23 +119,40 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     public void generateRandomArraySet() {
-        for (int i = 0; i < num_buttons; i++) {
-            generateLetter();
+        // Mientras el conjunto de letras no forme un tuti, seguimos creando conjuntos
+        while (!isTuti()) {
+            System.out.println("No es tuti");
+            for (int i = 0; i < num_buttons; i++) {
+                // Generamos una letra aleatoria
+                Random random = new Random(System.currentTimeMillis());
+                int letter = 65 + random.nextInt(26);
+
+                while(!set.add((char) letter)) {
+                    letter = 65 + random.nextInt(26);
+                }
+            }
         }
     }
 
-    /**
-     * Método que genera la letra
-     *
-     */
-    private void generateLetter() {
-        // Generamos una letra aleatoria
-        Random random = new Random(System.currentTimeMillis());
-        int letter = 65 + random.nextInt(26);
+    public boolean isTuti() {
+        Iterator treeIt = treeSet.iterator();
+        Iterator setIt = set.iterator();
 
-        while(!set.add((char) letter)) {
-            letter = 65 + random.nextInt(26);
+        System.out.println("hola1");
+
+        while (treeIt.hasNext()) {
+            System.out.println("hola2");
+            char letter = (char) treeIt.next();
+            String word = (String) setIt.next();
+
+            System.out.println("Palabra: " + word + "Letra: " + letter);
+
+            if (!word.contains("" + letter)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     /**
@@ -258,6 +278,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean isCorrect(String word) throws IOException {
         return ((word.length() >= 3) && (word.contains((String) buttons[6].getText())) && (treeSet.contains(word)));
+    }
+
+    public void putExtra() {
+        Intent intent = new Intent(this, MainActivity2.class);
+        String message = "Hello World";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 
     private String Lista(){
