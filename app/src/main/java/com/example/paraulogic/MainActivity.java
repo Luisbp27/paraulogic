@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         this.numWords = 0;
         this.treeSet = new TreeSet<String>();
 
+        generarArbolDiccionario();
         generateRandomArraySet();
         initButtons();
-        generarArbolDiccionario();
     }
 
     private void generarArbolDiccionario() throws Exception {
@@ -134,25 +134,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isTuti() {
-        Iterator treeIt = treeSet.iterator();
-        Iterator setIt = set.iterator();
+        Iterator diccionario = treeSet.iterator();
+        Iterator setIt;
+        int count;
 
-        System.out.println("hola1");
+        // Diccionari {Kas}
+        // SET {K, A, T, G, Y, J, L}
+        while (diccionario.hasNext()) {
+            String word = (String) diccionario.next();
 
-        while (treeIt.hasNext()) {
-            System.out.println("hola2");
-            char letter = (char) treeIt.next();
-            String word = (String) setIt.next();
+            count = 0;
+            setIt = set.iterator();
+            for (int i = 0; i < 7; i++) {
+                String letter = setIt.next().toString();
 
-            System.out.println("Palabra: " + word + "Letra: " + letter);
+                System.out.println("Caracter set: " + letter);
 
-            if (!word.contains("" + letter)) {
-                return false;
+                if (word.contains("" + letter)) {
+                    count++;
+                }
+
+            }
+
+            if (count == idButtons.length) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
