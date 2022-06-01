@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLOutput;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.TreeSet;
@@ -23,7 +22,7 @@ import java.util.TreeSet;
 public class MainActivity extends AppCompatActivity {
 
     private final int[] idButtons = {R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6, R.id.button7};
-    private final int num_buttons = idButtons.length;
+    private final int numButtons = idButtons.length;
     private Button[] buttons;
     private UnsortedArraySet<Character> set;
     private BSTMapping<String, Integer> bst;
@@ -54,18 +53,22 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     private void initComponents() throws Exception {
-        this.set = new UnsortedArraySet<Character>(num_buttons);
-        this.buttons = new Button[num_buttons];
+        this.set = new UnsortedArraySet<Character>(numButtons);
+        this.buttons = new Button[numButtons];
         this.bst = new BSTMapping<String, Integer>();
         this.numWords = 0;
         this.treeSet = new TreeSet<String>();
 
-        generarArbolDiccionario();
-        generateRandomArraySet();
-        initButtons();
+        generateDictionariTree();
+        generateArraySet();
     }
 
-    private void generarArbolDiccionario() throws Exception {
+    /**
+     * Método que genera un arbol rojo y negro del contenido del fichero
+     *
+     * @throws Exception
+     */
+    private void generateDictionariTree() throws Exception {
         InputStream is = getResources().openRawResource(R.raw.catala_filtrat);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -84,10 +87,10 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     private void initButtons() {
-        // Variable que nos permitira iterar de forma sencilla entre los vlaores del array "set"
+        // Variable que nos permitira iterar de forma sencilla entre los valores del array "set"
         Iterator iterator = set.iterator();
 
-        for (int i = 0; i < num_buttons; i++) {
+        for (int i = 0; i < numButtons; i++) {
             buttons[i] = findViewById(idButtons[i]);
             System.out.println((buttons[i].toString()));
             buttons[i].setText(iterator.next().toString());
@@ -115,58 +118,124 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que genera un array random
+     * Método para generar el conjunto no ordenado de letras hasta que encuentre un conjunto Tuti
      *
      */
-    public void generateRandomArraySet() {
-        // Mientras el conjunto de letras no forme un tuti, seguimos creando conjuntos
-        while (!isTuti()) {
-            System.out.println("No es tuti");
-            for (int i = 0; i < num_buttons; i++) {
-                // Generamos una letra aleatoria
-                Random random = new Random(System.currentTimeMillis());
-                int letter = 65 + random.nextInt(26);
+    private void generateArraySet() {
+        generateRandomArraySet();
 
-                while(!set.add((char) letter)) {
-                    letter = 65 + random.nextInt(26);
-                }
-            }
+        while(!tuti()) {
+            generateRandomArraySet();
         }
     }
 
     /**
+     * Método para generar un conjunto no ordenado de letras con mínimo una vocal
+     *
+     */
+    private void generateRandomArraySet() {
+        set = new UnsortedArraySet<Character>(numButtons);
+
+        generateVowel();
+        for (int i = 0; i < numButtons - 1; i++) {
+            generateLetter();
+        }
+
+        initButtons();
+    }
+
+    /**
+     * Método que verifica si hay alguna palabra que cumpla la condición de Tuti dentro del
+     * conjunto no ordenado de letras
      *
      * @return
      */
-    public boolean isTuti() {
-        Iterator diccionario = treeSet.iterator();
-        Iterator setIt;
-        int count;
+    private boolean tuti() {
+        Iterator it = treeSet.iterator();
+        String word;
 
-        // Diccionari {Kas}
-        // SET {K, A, T, G, Y, J, L}
-        while (diccionario.hasNext()) {
-            String word = (String) diccionario.next();
+        while(it.hasNext()){
+            word = it.next().toString();
 
-            count = 0;
-            setIt = set.iterator();
-            for (int i = 0; i < 7; i++) {
-                String letter = setIt.next().toString();
-
-                System.out.println("Caracter set: " + letter);
-
-                if (word.contains("" + letter)) {
-                    count++;
+            if(isSolution(word)){
+                if(isTuti(word)){
+                    return true;
                 }
-
-            }
-
-            if (count == idButtons.length) {
-                return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Método que verifica si la palabra pasada por parámetro es Tuti o no
+     *
+     * @param word
+     * @return
+     */
+    private boolean isTuti(String word) {
+        Iterator it = set.iterator();
+        String str;
+
+        while(it.hasNext()){
+            str = it.next().toString();
+
+            if(!word.contains(str.toLowerCase())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Método para verificar si una palabra tiene solución, es decir, que tiene únicamente palabras
+     * de nuestro conjunto de letras
+     *
+     * @param word
+     * @return
+     */
+    private boolean isSolution(String word) {
+        String letter = (String) buttons[6].getText();
+        boolean possible = word.contains(letter.toLowerCase());
+
+        if (possible) {
+            // Observamos is la palabra solo contiene letras de nuestro conjunto
+            for (int i = 0; i < word.length(); i++) {
+                if (!set.contains(Character.toUpperCase(word.charAt(i)))) {
+                    return false;
+                }
+            }
+        }else{
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Método para generar una letra aleatoria del abecedario
+     *
+     */
+    private void generateLetter(){
+        Random random = new Random(System.currentTimeMillis());
+        int letter = 65 + random.nextInt(26);
+
+        // Si se repite, añade una diferente
+        while(!set.add((char) letter)){
+            letter = 65 + random.nextInt(26);
+        }
+    }
+
+    /**
+     * Método para generar una vocal de forma aleatoria
+     *
+     */
+    private void generateVowel(){
+        Random random = new Random(System.currentTimeMillis());
+        char[] vowels = { 'A', 'E', 'I', 'O', 'U' };
+
+        set.add(vowels[random.nextInt(vowels.length - 1)]);
     }
 
     /**
@@ -176,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void shuffle(View view) {
         char[] letters = unsortedArraySetToCharArray();
-        randomize(letters, num_buttons - 1);
+        randomize(letters, numButtons - 1);
 
-        for (int i = 0; i < num_buttons - 1; i++) {
+        for (int i = 0; i < numButtons - 1; i++) {
             buttons[i].setText(Character.toString(letters[i]));
         }
     }
@@ -189,10 +258,10 @@ public class MainActivity extends AppCompatActivity {
      * @return
      */
     public char[] unsortedArraySetToCharArray() {
-        char[] words = new char[num_buttons - 1];
+        char[] words = new char[numButtons - 1];
         Iterator iterator = set.iterator();
 
-        for (int i = 0; iterator.hasNext() && i < num_buttons - 1 ; i++) {
+        for (int i = 0; iterator.hasNext() && i < numButtons - 1 ; i++) {
             words[i] = (char) iterator.next();
         }
 
@@ -240,8 +309,8 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void introdueix(View view) throws IOException {
-        TextView word = (TextView) findViewById ( R.id.word );
-        TextView foundWords = (TextView) findViewById ( R.id.palabras );
+        TextView word = findViewById ( R.id.word );
+        TextView foundWords = findViewById ( R.id.palabras );
         // Obtenemos la palabra central
         String str = (String) word.getText();
         Integer times = 0;
@@ -272,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
             // Generamos el aviso de error
             Context context = getApplicationContext();
             CharSequence text = "";
-            int duracion = Toast.LENGTH_LONG;
+            int duration = Toast.LENGTH_LONG;
 
             if (str.length() < 3) {
                 text = "La palabra introducida es demasiado corta. ¡Prueba otra vez!";
@@ -280,40 +349,78 @@ public class MainActivity extends AppCompatActivity {
                 text = "La palabra introducida no es correcta. ¡Prueba otra vez!";
             }
 
-            Toast toast = Toast.makeText(context, text, duracion);
+            Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         }
     }
 
     /**
+     * Método que verifica si una palabra es correcta o no
      *
      * @param word
      * @return
      */
-    private boolean isCorrect(String word) throws IOException {
-        return ((word.length() >= 3) && (word.contains((String) buttons[6].getText())) && (treeSet.contains(word)));
+    private boolean isCorrect(String word) {
+        String letter = (String) buttons[6].getText();
+        return (word.length() >= 3) && (word.contains(letter) && treeSet.contains(word.toLowerCase()));
     }
 
-    public void putExtra() {
-        Intent intent = new Intent(this, MainActivity2.class);
-        String message = "Hello World";
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+    /**
+     * Método para transferir la información a la ventana extra
+     *
+     * @param view
+     */
+    public void visualizarPalabras(View view) {
+        Intent intent = new Intent(this, MainActivity2.class) ;
+        String message = getPalabrasValidas();
+        intent.putExtra(EXTRA_MESSAGE, message) ;
+        startActivity(intent) ;
     }
 
-    private String Lista(){
-        String str = "Has introducido "+ numWords +" palabras:";
+    /**
+     * Método que devuelve el conjunto de palabras validas de la partida
+     *
+     * @return
+     */
+    private String getPalabrasValidas() {
+        Iterator it = treeSet.iterator();
+        String str = "";
+        String word;
+
+        while(it.hasNext()){
+            word = it.next().toString();
+
+            if(isSolution(word)){
+                if(isTuti(word)){
+                    str += "<font color = 'red'>" + word + " </font>, ";
+                    System.out.println("Solución y Tuti: " + word);
+                }else{
+                    str += word + ", ";
+                }
+            }
+        }
+
+        return str;
+    }
+
+    /**
+     * Método que genera la lista de palabras correctas introducidas por el usuario
+     *
+     * @return
+     */
+    private String Lista() {
+        String str = "Has introducido " + numWords + " palabras:";
         Iterator iterator = bst.IteratorBSTMappging();
         BSTMapping.Pair pair;
 
-        if(iterator.hasNext()){
+        if (iterator.hasNext()) {
             pair = (BSTMapping.Pair)iterator.next();
-            str += pair.getKey()+" ("+pair.getValue()+")";
+            str += pair.getKey()+" (" + pair.getValue() + ")";
         }
 
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             pair = (BSTMapping.Pair)iterator.next();
-            str += ", "+pair.getKey()+" ("+pair.getValue()+")";
+            str += ", " + pair.getKey() + " (" + pair.getValue() + ")";
         }
 
         return str;

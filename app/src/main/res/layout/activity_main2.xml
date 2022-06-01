@@ -10,7 +10,7 @@
         android:id="@+id/title"
         android:layout_width="350dp"
         android:layout_height="650dp"
-        android:text="Texto vacío"
+        android:text=""
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
