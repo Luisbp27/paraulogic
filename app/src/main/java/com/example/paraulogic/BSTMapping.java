@@ -8,14 +8,16 @@ public class BSTMapping<K extends Comparable, V> {
     private Node root;
 
     /**
-     * Método constructor de la clase
+     * Mètode constructor de la classe
+     *
      */
     public BSTMapping() {
         this.root = null;
     }
 
     /**
-     * Método que devuelve un iterador del mapping
+     * Mètode que retorna un iterador del mapping
+     *
      * @return
      */
     public Iterator IteratorBSTMappging() {
@@ -23,22 +25,23 @@ public class BSTMapping<K extends Comparable, V> {
     }
 
     /**
-     * Método que añade un elemento al mapping
+     * Mètode que afegeix un element al mapping
+     *
      * @param key
      * @param value
      * @return
      */
     public V put(K key, V value){
-        // Obtenemos el valor anterior
+        // Obtenim el valor anterior
         V valor = get(key);
-        // Modificamos
+        // El modificam
         this.root = put(key, value, root);
 
         return valor;
     }
 
     /**
-     * Método que añade un elemento al mapping
+     * Mètode que afegeix un element al mapping
      *
      * @param key
      * @param value
@@ -65,7 +68,7 @@ public class BSTMapping<K extends Comparable, V> {
     }
 
     /**
-     * Método que devuelve el conjunto asociado a la key pasada por parámetro
+     * Mètode que retorna el conjunt associat a la key pasada per paràmetre
      *
      * @param key
      * @return
@@ -75,6 +78,7 @@ public class BSTMapping<K extends Comparable, V> {
     }
 
     /**
+     * Mètode que retorna el conjunt associat a la key i el node passats per paràmetre
      *
      * @param key
      * @param current
@@ -96,7 +100,7 @@ public class BSTMapping<K extends Comparable, V> {
     }
 
     /**
-     * Método que elimina el elemento asociado a la key pasada por parámetro
+     * Mètode que elimina l'element associat a la key passada per paràmetre
      *
      * @param key
      * @return
@@ -107,32 +111,33 @@ public class BSTMapping<K extends Comparable, V> {
     }
 
     /**
+     * Mètode que elimina l'element associat a la key i el node passats per paràmetre
      *
      * @param key
      * @param current
      * @return
      */
     private Node remove(K key, Node current) {
-        // Si no encontramos el elemento
+        // Si no hi ha element
         if (current == null) {
             return null;
         }
 
         if (current.key.equals(key)) {
-            // Eliminamos el nodo
+            // Eliminam el node
             if (current.right == null && current.left == null) {
                 return null;
             } else {
-                // Si tiene 1 hijo
+                // Si té 1 fill
                 if (!(current.left == null && current.right == null)) {
                     if (current.left == null) {
                         return current.right;
                     } else {
                         return current.left;
                     }
-                    // Si tiene 2 hijos
+                // Si té 2 fills
                 } else {
-                    // Nodo más a la izquierda del hijo derecho
+                    // Node més a l'esquerre del fill dret
                     Node plowest = current.right;
                     Node parent = current;
 
@@ -152,10 +157,10 @@ public class BSTMapping<K extends Comparable, V> {
             }
         }
 
-        // Subarbol izquierdo
+        // Subarbre esquerre
         if (key.compareTo(current.key) < 0) {
             current.left = remove(key, current.left);
-            // Subarbol derecho
+        // Subarbre dret
         } else {
             current.right = remove(key, current.right);
         }
@@ -164,38 +169,46 @@ public class BSTMapping<K extends Comparable, V> {
     }
 
     /**
-     * Método que verifica si hay o no elementos
+     * Classe Node
      *
-     * @return
-     */
-    public boolean isEmpty() {
-        return root == null;
-    }
-
-    // CLASES PRIVADAS //
-
-    /**
-     * Clase Nodo
      */
     private class Node {
 
+        private K key;
+        private V value;
+        private Node left, right;
+
+        /**
+         * Mètode constructor de la classe
+         *
+         * @param key
+         * @param value
+         * @param left
+         * @param right
+         */
         public Node(K key, V value, Node left, Node right) {
             this.key = key;
             this.value = value;
             this.left = left;
             this.right = right;
         }
-
-        private K key;
-        private V value;
-        private Node left, right;
     }
 
+    /**
+     * Classe Pair
+     *
+     */
     protected class Pair {
 
         private K key;
         private V value;
 
+        /**
+         * Mètode constructor de la classe
+         *
+         * @param key
+         * @param value
+         */
         private Pair(K key, V value) {
             this.key = key;
             this.value = value;
@@ -212,30 +225,36 @@ public class BSTMapping<K extends Comparable, V> {
     }
 
     /**
+     * Classe Iterator per al BSTMapping
      *
      */
     private class IteratorBSTMapping implements Iterator {
 
         private Stack<Node> iterator;
 
+        /**
+         * Mètode constructor de la classe
+         *
+         */
         public IteratorBSTMapping() {
-            Node p;
+            Node node;
             this.iterator = new Stack();
 
             if (root != null) {
-                p = root;
+                node = root;
 
-                while (p.left != null) {
-                    iterator.push(p);
-                    p = p.left;
+                while (node.left != null) {
+                    iterator.push(node);
+                    node = node.left;
                 }
 
-                iterator.push(p);
+                iterator.push(node);
             }
         }
 
         /**
-         * Método que verifica si quedan más nodos por visitar
+         * Mètode que verifica si queden més nodes per visitar
+         *
          * @return
          */
         @Override
@@ -244,21 +263,22 @@ public class BSTMapping<K extends Comparable, V> {
         }
 
         /**
-         * Método que devuelve el siguiente nodo a visitar
+         * Mètode que retorna el següent node a visitar
          *
          * @return
          */
         @Override
         public Object next() {
-            Node p = iterator.pop();
-            Pair pair = new Pair(p.key, p.value);
-            if (p.right != null) {
-                p = p.right;
-                while (p.left != null) {
-                    iterator.push(p);
-                    p = p.left;
+            Node node = iterator.pop();
+            Pair pair = new Pair(node.key, node.value);
+
+            if (node.right != null) {
+                node = node.right;
+                while (node.left != null) {
+                    iterator.push(node);
+                    node = node.left;
                 }
-                iterator.push(p);
+                iterator.push(node);
             }
             return pair;
         }

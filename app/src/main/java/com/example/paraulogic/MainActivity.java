@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.paraulogic.MESSAGE";
 
     /**
-     * Constructor de la clase
+     * Constructor de la classe
      *
      * @param savedInstanceState
      */
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Inicialización de los componentes
+     * Inicialització dels components
      *
      */
     private void initComponents() throws Exception {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que genera un arbol rojo y negro del contenido del fichero
+     * Mètode que genera un arbre vermell i negre del contingut del fitxer diccionari
      *
      * @throws Exception
      */
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         InputStream is = getResources().openRawResource(R.raw.catala_filtrat);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
+        // Llegim el diccionari i emmagatzemam les paraules de igual o més de tres lletres
         String word = br.readLine();
         while (word != null) {
             if (word.length() >= 3) {
@@ -83,13 +84,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Inicialización de los botones
+     * Inicialització dels botons
      *
      */
     private void initButtons() {
-        // Variable que nos permitira iterar de forma sencilla entre los valores del array "set"
         Iterator iterator = set.iterator();
 
+        // Assignam tots els paràmetres als botons
         for (int i = 0; i < numButtons; i++) {
             buttons[i] = findViewById(idButtons[i]);
             System.out.println((buttons[i].toString()));
@@ -105,20 +106,20 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressLint("SetTextI18n")
     public void setLletra(View view) {
-        // Adquirimos las variables de la interfaz que queremos modificar
+        // Adquirim les variables de l'interfaç que volem modificar
         Button button = findViewById(view.getId());
         TextView word = findViewById(R.id.word);
 
-        // Quitamos el error
+        // Llevam l'error
         word.setBackgroundColor(0);
 
-        // Actualizamos el contenido
+        // Actualitzam el contingut
         String txtOriginal = (String) word.getText();
         word.setText(txtOriginal + button.getText());
     }
 
     /**
-     * Método para generar el conjunto no ordenado de letras hasta que encuentre un conjunto Tuti
+     * Mètode que genera el conjunt no ordenat de lletres fins a que trobi un conjunt que sigui tuti
      *
      */
     private void generateArraySet() {
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método para generar un conjunto no ordenado de letras con mínimo una vocal
+     * Mètode que genera un conjunt no ordenat de lletres amb mínim una vocal
      *
      */
     private void generateRandomArraySet() {
@@ -145,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que verifica si hay alguna palabra que cumpla la condición de Tuti dentro del
-     * conjunto no ordenado de letras
+     * Mètode que verifica si hi ha alguna paraula que compleix la condició de tuti adins del
+     * conjunt no ordenat de lletres
      *
      * @return
      */
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que verifica si la palabra pasada por parámetro es Tuti o no
+     * Mètode que verifica si una paraula pasada per paràmetre és tuti o no
      *
      * @param word
      * @return
@@ -189,8 +190,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método para verificar si una palabra tiene solución, es decir, que tiene únicamente palabras
-     * de nuestro conjunto de letras
+     * Mètode que verifica si la paraula pasada per paràmetre, té solució o no
      *
      * @param word
      * @return
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         boolean possible = word.contains(letter.toLowerCase());
 
         if (possible) {
-            // Observamos is la palabra solo contiene letras de nuestro conjunto
+            // Observam si la paraula només conté les lletres del nostre conjunt
             for (int i = 0; i < word.length(); i++) {
                 if (!set.contains(Character.toUpperCase(word.charAt(i)))) {
                     return false;
@@ -214,21 +214,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método para generar una letra aleatoria del abecedario
+     * Mètode que genera una lletra aleatòria de l'abecedari
      *
      */
     private void generateLetter(){
         Random random = new Random(System.currentTimeMillis());
         int letter = 65 + random.nextInt(26);
 
-        // Si se repite, añade una diferente
+        // Si es repeteix, s'afegeix una diferent
         while(!set.add((char) letter)){
             letter = 65 + random.nextInt(26);
         }
     }
 
     /**
-     * Método para generar una vocal de forma aleatoria
+     * Mètode que genera una vocal de forma aleatòria
      *
      */
     private void generateVowel(){
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que realiza la acción de barajar el array de letras contenidas en los botones azules
+     * Mètode que realitza el barrejat de l'array de lletres contingudes als botons blaus
      *
      * @param view
      */
@@ -253,23 +253,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que devuelve un char[] de los elementos de la lista ya creada
+     * Mètode que retorna un conjunt de lletres dels elements de la llista ja creada
      *
      * @return
      */
     public char[] unsortedArraySetToCharArray() {
-        char[] words = new char[numButtons - 1];
+        char[] letters = new char[numButtons - 1];
         Iterator iterator = set.iterator();
 
         for (int i = 0; iterator.hasNext() && i < numButtons - 1 ; i++) {
-            words[i] = (char) iterator.next();
+            letters[i] = (char) iterator.next();
         }
 
-        return words;
+        return letters;
     }
 
     /**
-     * Método que mezcla el array pasado por parámetro
+     * Mètode que barreja l'array pasat un valor per paràmetre
      *
      * @param arr
      * @param n
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que elimina la palabra del TextView introducida por el usuario
+     * Mètode que elimina la paraula, introduïda per l'usuari, del component TextView
      *
      * @param view
      */
@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         TextView word = findViewById(R.id.word);
         String str = (String) word.getText();
 
-        // Quitamos el error
+        // Llevam l'error
         word.setBackgroundColor(0);
 
         if (str.length() > 0) {
@@ -304,41 +304,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que introduce una palabra en el TextView
+     * Mètode que introdueix la paraula creada per l'usuari al component TextView
      *
      * @param view
      */
     public void introdueix(View view) throws IOException {
         TextView word = findViewById ( R.id.word );
         TextView foundWords = findViewById ( R.id.palabras );
-        // Obtenemos la palabra central
+        // Obtenim la lletra central
         String str = (String) word.getText();
         Integer times = 0;
 
         if(isCorrect(str)){
-            // Obtenemos las apariciones anteriores
+            // Obtenim les aparicions anteriors
             times = bst.get(str);
             System.out.println("{Palabara: " + str + ", Apariciones: " + times);
 
-            // Si no hay apariciones de esa palabra
+            // Si no hi ha aparicions de la paraula
             if(times == null){
                 bst.put(str, 1);
                 numWords++;
-            // Si ya había aparecido
+            // Si ja havia aparegut
             }else{
                 bst.put(str, times + 1);
             }
 
-            // Visualización de la lista de palabras
-            foundWords.setText(Lista());
+            // Visualització de la llista de paraules
+            foundWords.setText(list());
 
-            // Borramos el TextView superior para introducir la siguiente palabra
+            // Esborram el TextView superior per a introduïr la següent paraula
             word.setText("");
 
         } else {
             word.setBackground(getResources().getDrawable(com.google.android.material.R.color.error_color_material_light));
 
-            // Generamos el aviso de error
+            // Generam l'avís d'error
             Context context = getApplicationContext();
             CharSequence text = "";
             int duration = Toast.LENGTH_LONG;
@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que verifica si una palabra es correcta o no
+     * Mètode que verifica si una paraula és correcte o no
      *
      * @param word
      * @return
@@ -366,23 +366,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método para transferir la información a la ventana extra
+     * Mètode per a transferir l'informació a la finestra extra
      *
      * @param view
      */
-    public void visualizarPalabras(View view) {
+    public void visualizeWords(View view) {
         Intent intent = new Intent(this, MainActivity2.class) ;
-        String message = getPalabrasValidas();
+        String message = getValidWords();
         intent.putExtra(EXTRA_MESSAGE, message) ;
         startActivity(intent) ;
     }
 
     /**
-     * Método que devuelve el conjunto de palabras validas de la partida
+     * Mètode que retorna el conjunt de paraules vàlides de la partida
      *
      * @return
      */
-    private String getPalabrasValidas() {
+    private String getValidWords() {
         Iterator it = treeSet.iterator();
         String str = "";
         String word;
@@ -393,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
             if(isSolution(word)){
                 if(isTuti(word)){
                     str += "<font color = 'red'>" + word + " </font>, ";
-                    System.out.println("Solución y Tuti: " + word);
+                    System.out.println("Solució i Tuti: " + word);
                 }else{
                     str += word + ", ";
                 }
@@ -404,12 +404,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Método que genera la lista de palabras correctas introducidas por el usuario
+     * Mètode que genera la llista de paraules correctes introduides per l'usuari
      *
      * @return
      */
-    private String Lista() {
-        String str = "Has introducido " + numWords + " palabras:";
+    private String list() {
+        String str = "Has introduït " + numWords + " paraules: ";
         Iterator iterator = bst.IteratorBSTMappging();
         BSTMapping.Pair pair;
 

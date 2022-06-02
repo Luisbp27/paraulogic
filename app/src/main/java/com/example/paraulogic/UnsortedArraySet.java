@@ -8,7 +8,7 @@ public class UnsortedArraySet<E> {
     private int n;
 
     /**
-     * Método constructor de la clase
+     * Mètode constructor de la classe
      *
      * @param max
      */
@@ -18,7 +18,7 @@ public class UnsortedArraySet<E> {
     }
 
     /**
-     * Método que nos permite saber si un elemento, pasado por parámetro, esta contenido en el array
+     * Mètode que permet verificar is un element, pasat per paràmetre, està o no contingut dins l'array
      *
      * @param elem
      * @return
@@ -34,7 +34,8 @@ public class UnsortedArraySet<E> {
     }
 
     /**
-     * Método que añade un elemento, pasado por parámetro, al array
+     * Mètode que afegeix un element, pasat per paràmetre, a l'array
+     *
      * @param elem
      * @return
      */
@@ -50,24 +51,23 @@ public class UnsortedArraySet<E> {
     }
 
     /**
-     * Método constructor de la clase Iterator
+     * Mètode constructor de la classe Iterator
      *
      * @return
      */
     public Iterator iterator(){
-        Iterator iterator = new IteratorUnsortedArraySet();
-        return iterator;
+        return new IteratorUnsortedArraySet();
     }
 
     /**
-     * Clase Iterator para el arraySet creado
+     * Mètode que implementa la classe Iterator per a l'array set creat
      *
      */
     private class IteratorUnsortedArraySet implements Iterator{
         private int idxIterator;
 
         /**
-         * Método constructor de la clase
+         * Mètode constructor de la classe
          *
          */
         private IteratorUnsortedArraySet() {
@@ -75,7 +75,7 @@ public class UnsortedArraySet<E> {
         }
 
         /**
-         * Método que comprueba si existe un valor en la siguiente posición de la lista
+         * Mètode que verifica si existeix un valor a la següent posició de la llista
          *
          * @return
          */
@@ -85,13 +85,14 @@ public class UnsortedArraySet<E> {
         }
 
         /**
-         * Método que devuelve el siguiente elemento de la lista
+         * Mètode que retorna el següent element de la llista
          *
          * @return
          */
         @Override
         public Object next() {
             idxIterator++;
+
             return array[idxIterator - 1];
         }
 
