@@ -24,7 +24,7 @@ public class MainActivity2 extends AppCompatActivity {
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 
 
-        TextView solutions = (TextView) findViewById(R.id.palabras);
-        solutions.setText(Html.fromHtml(message, Html.FROM_HTML_MODE_COMPACT));
+        TextView solutions = (TextView) findViewById(R.id.words);
+        solutions.setText(Html.fromHtml(message));
     }
 }

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private int numWords;
     private TreeSet treeSet;
 
-    public static final String EXTRA_MESSAGE = "com.example.paraulogic.MESSAGE";
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     /**
      * Constructor de la classe
@@ -370,19 +370,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param view
      */
-    public void visualizeWords(View view) {
-        Intent intent = new Intent(this, MainActivity2.class) ;
-        String message = getValidWords();
-        intent.putExtra(EXTRA_MESSAGE, message) ;
-        startActivity(intent) ;
-    }
-
-    /**
-     * Mètode que retorna el conjunt de paraules vàlides de la partida
-     *
-     * @return
-     */
-    private String getValidWords() {
+    public void newWindow(View view) {
         Iterator it = treeSet.iterator();
         String str = "";
         String word;
@@ -400,7 +388,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        return str;
+        str += "</html>";
+        Intent intent = new Intent(this, MainActivity2.class);
+        intent.putExtra(EXTRA_MESSAGE, str) ;
+        startActivity(intent) ;
     }
 
     /**
