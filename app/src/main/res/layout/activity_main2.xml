@@ -8,8 +8,8 @@
 
     <TextView
         android:id="@+id/words"
-        android:layout_width="350dp"
-        android:layout_height="650dp"
+        android:layout_width="380dp"
+        android:layout_height="698dp"
         android:text=""
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
